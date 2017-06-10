@@ -37,3 +37,7 @@ end
 function sleep(timeInSec, silent)
     wait(timeInSec, nil, true)
 end
+
+if LUA_VERSION >= 53 then
+    unpack = table.unpack
+end
