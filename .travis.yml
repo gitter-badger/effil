@@ -14,15 +14,14 @@ matrix:
           packages:
             - g++-5
       install:
-        - ci/test_all.sh $LUA $TRAVIS_BUILD_DIR/lua
+        - ci/install.sh $LUA $TRAVIS_BUILD_DIR/lua
         - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 30
-
     - compiler: clang
       env: LUA=lua5.1
       os: osx
       osx_image: xcode8.3
       install:
-        - ci/test_all.sh $LUA $TRAVIS_BUILD_DIR/lua
+        - ci/install.sh $LUA $TRAVIS_BUILD_DIR/lua
     - compiler: g++-5
       env: LUA=lua5.2
       addons:
@@ -32,7 +31,7 @@ matrix:
           packages:
             - g++-5
       install:
-        - ci/test_all.sh $LUA $TRAVIS_BUILD_DIR/lua
+        - ci/install.sh $LUA $TRAVIS_BUILD_DIR/lua
         - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 30
 
     - compiler: clang
@@ -40,7 +39,7 @@ matrix:
       os: osx
       osx_image: xcode8.3
       install:
-        - ci/test_all.sh $LUA $TRAVIS_BUILD_DIR/lua
+        - ci/install.sh $LUA $TRAVIS_BUILD_DIR/lua
     - compiler: g++-5
       env: LUA=lua5.3
       addons:
@@ -50,7 +49,7 @@ matrix:
           packages:
             - g++-5
       install:
-        - ci/test_all.sh $LUA $TRAVIS_BUILD_DIR/lua
+        - ci/install.sh $LUA $TRAVIS_BUILD_DIR/lua
         - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 30
 
     - compiler: clang
@@ -58,7 +57,7 @@ matrix:
       os: osx
       osx_image: xcode8.3
       install:
-        - ci/test_all.sh $LUA $TRAVIS_BUILD_DIR/lua
+        - ci/install.sh $LUA $TRAVIS_BUILD_DIR/lua
 
 script:
   - ci/test_all.sh -DLUA_INCLUDE_DIR="$TRAVIS_BUILD_DIR/lua/include" -DLUA_LIBRARY="$TRAVIS_BUILD_DIR/lua/lib/liblua.so"
