@@ -62,20 +62,16 @@ else
     cd lua-5.3.3;
   fi
 
-  patch Makefile $ROOT_DIR/Makefile.patch
-  patch src/Makefile $ROOT_DIR/src.Makefile.patch
-
   # Modify root Makefile
-  #modify_file Makefile "^\(TO_LIB=.+\)$" "\1 liblua.so"
-  # Modify child Makefile
-  #exit 1
-  #modify_file src/Makefile \
-  #    "^\(LUAC_O=.+\)" "\1\nLUA_SO= liblua.so" \
-  #    "^\(ALL_T=.+\)"  '\1 $(LUA_SO)' \
-  #    "^\(CFLAGS=.+\)" "\1 -fPIC"
+  modify_file Makefile "^\(TO_LIB=.*\)$" "\1 liblua.so"
+  #Modify child Makefile
+  modify_file src/Makefile \
+      "^\(LUAC_O=.*\)" "\1\nLUA_SO= liblua.so" \
+      "^\(ALL_T=.*\)"  '\1 $(LUA_SO)' \
+      "^\(CFLAGS=.*\)" "\1 -fPIC"
 
-  #echo '$(LUA_SO): $(CORE_O) $(LIB_O)' >> src/Makefile
-  #echo -e '\t$(CC) -shared -ldl -Wl,-soname,$(LUA_SO) -o $@ $? -lm $(MYLDFLAGS)' >> src/Makefile
+  echo '$(LUA_SO): $(CORE_O) $(LIB_O)' >> src/Makefile
+  echo -e '\t$(CC) -shared -ldl -Wl,-soname,$(LUA_SO) -o $@ $? -lm $(MYLDFLAGS)' >> src/Makefile
 
   make $PLATFORM
   make INSTALL_TOP="$TARGET_DIR" install
