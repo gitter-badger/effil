@@ -1,37 +1,64 @@
 language: cpp
 
+sudo: required
+dist: trusty
+
 matrix:
   include:
     - compiler: g++-5
-      sudo: required
-      dist: trusty
+      env: LUA=lua5.1
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
           packages:
             - g++-5
-            - lua5.2
-            - liblua5.2-dev
-      before_install:
-        - sudo apt-get autoremove lua lua5.1
       install:
-        - sudo apt-get install -y gdb
+        - ci/test_all.sh $LUA $TRAVIS_BUILD_DIR/lua
         - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 30
-      after_failure:
-        - COREFILE=$(find . -maxdepth 1 -name "core*" | head -n 1) # find core file
-        - if [[ -f "$COREFILE" ]]; then gdb -c "$COREFILE" ./tests -ex "thread apply all bt" -ex "set pagination 0" -batch; fi
-      before_script:
-        - ulimit -c unlimited -S
-      script:
-        - ci/test_all.sh -DLUA_INCLUDE_DIR="/usr/include/lua5.2" -DLUA_LIBRARY="/usr/lib/x86_64-linux-gnu/liblua5.2.so"
 
     - compiler: clang
+      env: LUA=lua5.1
       os: osx
       osx_image: xcode8.3
-      before_install:
-        - brew update
       install:
-        - brew install lua
-      script:
-        - ci/test_all.sh
+        - ci/test_all.sh $LUA $TRAVIS_BUILD_DIR/lua
+    - compiler: g++-5
+      env: LUA=lua5.2
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-5
+      install:
+        - ci/test_all.sh $LUA $TRAVIS_BUILD_DIR/lua
+        - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 30
+
+    - compiler: clang
+      env: LUA=lua5.2
+      os: osx
+      osx_image: xcode8.3
+      install:
+        - ci/test_all.sh $LUA $TRAVIS_BUILD_DIR/lua
+    - compiler: g++-5
+      env: LUA=lua5.3
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-5
+      install:
+        - ci/test_all.sh $LUA $TRAVIS_BUILD_DIR/lua
+        - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 30
+
+    - compiler: clang
+      env: LUA=lua5.3
+      os: osx
+      osx_image: xcode8.3
+      install:
+        - ci/test_all.sh $LUA $TRAVIS_BUILD_DIR/lua
+
+script:
+  - ci/test_all.sh -DLUA_INCLUDE_DIR="$TRAVIS_BUILD_DIR/lua/include" -DLUA_LIBRARY="$TRAVIS_BUILD_DIR/lua/lib/liblua.so"
