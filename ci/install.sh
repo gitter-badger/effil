@@ -70,8 +70,10 @@ else
       "^\(ALL_T=.*\)"  '\1 $(LUA_SO)' \
       "^\(CFLAGS=.*\)" '\1 -fPIC'
 
+  [ "$PLATFORM" == "linux" ] && SONAME_FLAG="-soname" || SONAME_FLAG="-install_name"
+
   echo '$(LUA_SO): $(CORE_O) $(LIB_O)' >> src/Makefile
-  echo -e '\t$(CC) -shared -ldl -Wl,-soname,$(LUA_SO) -o $@ $? -lm $(MYLDFLAGS)' >> src/Makefile
+  echo -e "\t\$(CC) -shared -ldl -Wl,$SONAME_FLAG,\$(LUA_SO) -o \$@ \$? -lm \$(MYLDFLAGS)" >> src/Makefile
 
   make $PLATFORM
   make INSTALL_TOP="$TARGET_DIR" install
