@@ -62,15 +62,21 @@ else
     cd lua-5.3.3;
   fi
 
+  if [ "$PLATFORM" == "linux" ]; then
+    SONAME_FLAG="-soname"
+    LIB_POSTFIX="so"
+  else
+    SONAME_FLAG="-install_name"
+    LIB_POSTFIX="dylib"
+  fi
+
   # Modify root Makefile
-  modify_file Makefile "^\(TO_LIB=.*\)$" "\1 liblua.so"
+  modify_file Makefile "^\(TO_LIB=.*\)$" "\1 liblua.$LIB_POSTFIX"
   #Modify child Makefile
   modify_file src/Makefile \
-      "^\(LUAC_O=.*\)" '\1\'$'\nLUA_SO= liblua.so' \
+      "^\(LUAC_O=.*\)" '\1\'$'\nLUA_SO= liblua.'"$LIB_POSTFIX" \
       "^\(ALL_T=.*\)"  '\1 $(LUA_SO)' \
       "^\(CFLAGS=.*\)" '\1 -fPIC'
-
-  [ "$PLATFORM" == "linux" ] && SONAME_FLAG="-soname" || SONAME_FLAG="-install_name"
 
   echo '$(LUA_SO): $(CORE_O) $(LIB_O)' >> src/Makefile
   echo -e "\t\$(CC) -shared -ldl -Wl,$SONAME_FLAG,\$(LUA_SO) -o \$@ \$? -lm \$(MYLDFLAGS)" >> src/Makefile
