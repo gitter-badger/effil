@@ -17,6 +17,8 @@ matrix:
       install:
         - ci/install.sh $LUA $LUA_DIR
         - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 30
+      script:
+        - ci/test_all.sh -DLUA_INCLUDE_DIR="$LUA_DIR/include" -DLUA_LIBRARY="$LUA_DIR/lib/liblua.so"
 
     # MacOs + Lua5.1
     - compiler: clang
@@ -25,6 +27,8 @@ matrix:
       osx_image: xcode8.3
       install:
         - ci/install.sh $LUA $LUA_DIR
+      script:
+        - ci/test_all.sh -DLUA_INCLUDE_DIR="$LUA_DIR/include" -DLUA_LIBRARY="$LUA_DIR/lib/liblua.dylib"
 
     # Linux + Lua5.2
     - compiler: g++-5
@@ -38,6 +42,8 @@ matrix:
       install:
         - ci/install.sh $LUA $LUA_DIR
         - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 30
+      script:
+        - ci/test_all.sh -DLUA_INCLUDE_DIR="$LUA_DIR/include" -DLUA_LIBRARY="$LUA_DIR/lib/liblua.so"
 
     # MacOs + Lua5.2
     - compiler: clang
@@ -46,6 +52,8 @@ matrix:
       osx_image: xcode8.3
       install:
         - ci/install.sh $LUA $LUA_DIR
+      script:
+        - ci/test_all.sh -DLUA_INCLUDE_DIR="$LUA_DIR/include" -DLUA_LIBRARY="$LUA_DIR/lib/liblua.dylib"
 
     # Linux + Lua5.3
     - compiler: g++-5
@@ -59,6 +67,8 @@ matrix:
       install:
         - ci/install.sh $LUA $LUA_DIR
         - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 30
+      script:
+        - ci/test_all.sh -DLUA_INCLUDE_DIR="$LUA_DIR/include" -DLUA_LIBRARY="$LUA_DIR/lib/liblua.so"
 
     # MacOs + Lua5.3
     - compiler: clang
@@ -67,6 +77,6 @@ matrix:
       osx_image: xcode8.3
       install:
         - ci/install.sh $LUA $LUA_DIR
+      script:
+        - ci/test_all.sh -DLUA_INCLUDE_DIR="$LUA_DIR/include" -DLUA_LIBRARY="$LUA_DIR/lib/liblua.dylib"
 
-script:
-  - ci/test_all.sh -DLUA_INCLUDE_DIR="$LUA_DIR/include" -DLUA_LIBRARY="$LUA_DIR/lib/liblua.so"
