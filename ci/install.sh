@@ -34,7 +34,7 @@ modify_file() {
   file_name=$1; shift
   while [[ $# -gt 1 ]]; do
     src=$1; dst=$2
-    cat $file_name | sed "s/$src/$dst/" > .tmpFile
+    cat $file_name | sed -e "s/$src/$dst/" > .tmpFile
     mv .tmpFile $file_name
     shift 2
   done
