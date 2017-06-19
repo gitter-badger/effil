@@ -36,7 +36,7 @@ set(LUA_TESTS tests/lua/tests.lua)
 
 include_directories(${GTEST_DIR}/include ${GTEST_DIR})
 add_executable(tests ${TEST_SOURCES} ${GTEST_DIR}/src/gtest-all.cc)
-target_link_libraries(tests effil)
+target_link_libraries(tests effil ${LUA_LIBRARY})
 
 #----------
 # FORMAT  -
