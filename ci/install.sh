@@ -76,7 +76,7 @@ else
   modify_file src/Makefile \
       "^\(LUAC_O=.*\)" '\1\'$'\nLUA_SO= liblua.'"$LIB_POSTFIX" \
       "^\(ALL_T=.*\)"  '\1 $(LUA_SO)' \
-      "^\(CFLAGS=.*\)" '\1 -fPIC'
+      "^\(CFLAGS=.*\)" '\1 -fPIC -Wl -E'
 
   echo '$(LUA_SO): $(CORE_O) $(LIB_O)' >> src/Makefile
   echo -e "\t\$(CC) -shared -ldl -Wl,$SONAME_FLAG,\$(LUA_SO) -o \$@ \$? -lm \$(MYLDFLAGS)" >> src/Makefile
