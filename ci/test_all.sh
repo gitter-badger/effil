@@ -3,6 +3,10 @@ set -e
 
 export DYLD_LIBRARY_PATH="$LUA_DIR/lib:$DYLD_LIBRARY_PATH"
 
+if [ -z "$LUA_BIN" ]; then
+    LUA_BIN="lua"
+fi
+
 for build_type in debug release; do
     mkdir -p $build_type
     (cd $build_type && cmake -DCMAKE_BUILD_TYPE=$build_type $@ .. && make -j4 install)
