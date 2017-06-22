@@ -14,8 +14,6 @@ if(APPLE)
     # Supress warning CMP0042
     set(CMAKE_MACOSX_RPATH 1)
     set(LIBRARY_EXT dylib)
-    link_directories($ENV{LUA_DIR}/lib)
-    set(LUA_LIBRARY "")
 else()
     set(LIBRARY_EXT so)
 endif()
