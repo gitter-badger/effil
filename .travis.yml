@@ -57,7 +57,7 @@ matrix:
       install:
         - brew install lua@5.1
       script:
-        - SOL2_OS_DETECTION_WORKAROUND=1 ci/test_all.sh
+        - SOL2_OS_DETECTION_WORKAROUND=1 LUA_BIN=lua5.1 ci/test_all.sh
     - os: osx
       compiler: clang
       osx_image: xcode8.3
