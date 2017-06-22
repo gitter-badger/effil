@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-export DYLD_LIBRARY_PATH="$LUA_DIR/lib:$DYLD_LIBRARY_PATH"
+#export DYLD_LIBRARY_PATH="$LUA_DIR/lib:$DYLD_LIBRARY_PATH"
 
 if [ -z "$LUA_BIN" ]; then
     LUA_BIN="lua"

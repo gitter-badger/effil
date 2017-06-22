@@ -73,7 +73,6 @@ matrix:
       before_install:
         - brew update
       install:
-        - brew install lua
         - brew install lua@5.3
       script:
-        - ci/test_all.sh
+        - LUA_BIN=lua5.3 ci/test_all.sh
