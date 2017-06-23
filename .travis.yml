@@ -6,6 +6,7 @@ sudo: required
 matrix:
   include:
     - os: linux
+      env: LUA=Lua5.1
       addons:
         apt:
           sources:
@@ -19,6 +20,7 @@ matrix:
       script:
         - ci/test_all.sh -DLUA_INCLUDE_DIR="/usr/include/lua5.1" -DLUA_LIBRARY="/usr/lib/x86_64-linux-gnu/liblua5.1.so"
     - os: linux
+      env: LUA=Lua5.2
       addons:
         apt:
           sources:
@@ -32,6 +34,7 @@ matrix:
       script:
         - ci/test_all.sh -DLUA_INCLUDE_DIR="/usr/include/lua5.2" -DLUA_LIBRARY="/usr/lib/x86_64-linux-gnu/liblua5.2.so"
     - os: linux
+      env: LUA=Lua5.3
       addons:
         apt:
           sources:
@@ -50,6 +53,7 @@ matrix:
         - ci/test_all.sh -DLUA_INCLUDE_DIR="/usr/include/lua5.3" -DLUA_LIBRARY="/usr/lib/x86_64-linux-gnu/liblua5.3.so"
 
     - os: osx
+      env: LUA=Lua5.1
       compiler: clang
       osx_image: xcode8.3
       before_install:
@@ -57,8 +61,9 @@ matrix:
       install:
         - brew install lua@5.1
       script:
-        - SOL2_OS_DETECTION_WORKAROUND=1 LUA_BIN=lua5.1 ci/test_all.sh
+        - LUA_BIN=lua5.1 ci/test_all.sh -D_POSIX_VERSION
     - os: osx
+      env: LUA=Lua5.2
       compiler: clang
       osx_image: xcode8.3
       before_install:
@@ -68,6 +73,7 @@ matrix:
       script:
         - ci/test_all.sh
     - os: osx
+      env: LUA=Lua5.3
       compiler: clang
       osx_image: xcode8.3
       before_install:
