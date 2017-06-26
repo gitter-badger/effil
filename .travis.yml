@@ -60,7 +60,7 @@ matrix:
           packages:
             - g++-5
             - luajit
-            - libjit-5.1-dev
+            - libluajit-5.1-dev
       install:
         - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 1
       script:
