@@ -280,7 +280,7 @@ TEST(sharedTable, ExternalUserdata) {
     };
 
     lua["udata"] = TestUserdata{17};
-    EXPECT_THROW(lua.script("st.userdata = udata"), sol::error);
+    EXPECT_ANY_THROW(lua.script("st.userdata = udata"));
 }
 
 TEST(sharedTable, LightUserdata) {
