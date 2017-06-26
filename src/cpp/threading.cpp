@@ -143,10 +143,14 @@ void runThread(std::shared_ptr<ThreadHandle> handle,
         sol::function userFuncObj = loadString(handle->lua(), strFunction);
         sol::function_result results = userFuncObj(std::move(arguments));
         (void)results; // just leave all returns on the stack
-        sol::variadic_args args(handle->lua(), -lua_gettop(handle->lua()));
-        for (const auto& iter : args) {
-            StoredObject store = createStoredObject(iter.get<sol::object>());
-            handle->result.emplace_back(std::move(store));
+        if (lua_gettop(handle->lua()) != 0)
+        {
+            sol::variadic_args args(handle->lua(), -lua_gettop(handle->lua()));
+            for (const auto& iter : args) {
+                std::cout << "Argssssss" << std::endl;
+                StoredObject store = createStoredObject(iter.get<sol::object>());
+                handle->result.emplace_back(std::move(store));
+            }
         }
         handle->status = Status::Completed;
     } catch (const LuaHookStopException&) {
