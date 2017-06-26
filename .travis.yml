@@ -51,6 +51,20 @@ matrix:
         - sudo update-alternatives --install /usr/bin/lua lua /usr/bin/lua5.3 1
       script:
         - ci/test_all.sh -DLUA_INCLUDE_DIR="/usr/include/lua5.3" -DLUA_LIBRARY="/usr/lib/x86_64-linux-gnu/liblua5.3.so"
+    - os: linux
+      env: LUA=LuaJIT
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-5
+            - luajit
+            - libjit-5.1-dev
+      install:
+        - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 1
+      script:
+        - LUA_BIN=luajit ci/test_all.sh -DLUA_INCLUDE_DIR="/usr/include/luajit-2.0" -DLUA_LIBRARY="/usr/lib/x86_64-linux-gnu/libluajit-5.1.so"
 
     - os: osx
       env: LUA=Lua5.1
@@ -82,3 +96,13 @@ matrix:
         - brew install lua@5.3
       script:
         - LUA_BIN=lua5.3 ci/test_all.sh
+    - os: osx
+      env: LUA=LuaJIT
+      compiler: clang
+      osx_image: xcode8.3
+      before_install:
+        - brew update
+      install:
+        - brew install luajit
+      script:
+        - LUA_BIN=luajit ci/test_all.sh
