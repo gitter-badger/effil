@@ -106,4 +106,4 @@ matrix:
         - brew install luajit
       script:
         - find /usr
-        - LUA_BIN=luajit ci/test_all.sh -DLUA_INCLUDE_DIR="/usr/include/luajit-2.0" -DLUA_LIBRARY="/usr/lib/libluajit-5.1.dylib"
+        - LUA_BIN=luajit ci/test_all.sh -DLUA_INCLUDE_DIR="/usr/local/Cellar/luajit/2.0.5/include/luajit-2.0" -DLUA_LIBRARY="/usr/local/Cellar/luajit/2.0.5/lib/libluajit.dylib"
