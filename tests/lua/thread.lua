@@ -78,9 +78,18 @@ test.thread.detached = function ()
 end
 
 test.thread.cancel = function ()
-    local thread = effil.thread(function()
-        while true do end
-    end)()
+    local thread = effil.thread(
+        jit ~= nil and
+            function()
+                while true do
+                    require("effil").yield()
+                end
+            end
+        or
+            function()
+                while true do end
+            end
+    )()
 
     test.is_true(thread:cancel())
     test.equal(thread:status(), "canceled")
