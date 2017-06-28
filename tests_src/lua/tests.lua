@@ -1,6 +1,6 @@
 #!/usr/bin/env lua
 
-package.path = ";../tests/lua/?.lua;../libs/u-test/?.lua;../src/lua/?.lua"
+package.path = ";../tests_src/lua/?.lua;../libs/u-test/?.lua;../src/lua/?.lua"
 
 require "type"
 require "gc"
