@@ -21,11 +21,6 @@ endif()
 add_library(effil SHARED ${SOURCES})
 target_link_libraries(effil -lpthread ${LUA_LIBRARY} -ldl)
 
-# TODO: remove after patching and updating sol2
-if(DEFINED ENV{SOL2_OS_DETECTION_WORKAROUND})
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_POSIX_VERSION")
-endif()
-
 set(GENERAL "-std=c++14 -DSOL_EXCEPTIONS_SAFE_PROPAGATION")
 set(ENABLE_WARNINGS "-Wall -Wextra -pedantic")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GENERAL} ${ENABLE_WARNINGS}")
