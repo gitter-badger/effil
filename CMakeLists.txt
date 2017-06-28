@@ -48,10 +48,10 @@ add_custom_target( format
 #----------
 # INSTALL -
 #----------
-install(FILES ${LUA_TESTS}
-        DESTINATION ${CMAKE_BINARY_DIR}
+install(FILES ${LUA_TESTS} src/lua/effil.lua
+        DESTINATION .
         PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_READ)
 
-install(TARGETS effil src/lua/effil.lua
-        DESTINATION ${CMAKE_BINARY_DIR}
+install(TARGETS effil
+        DESTINATION .
         PERMISSIONS OWNER_WRITE OWNER_READ GROUP_READ GROUP_WRITE)
