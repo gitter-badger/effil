@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 project(effil)
 
-if (NOT LUA_INCLUDE_DIR OR NOT LUA_LIBRARY)
+if (NOT LUA_INCLUDE_DIR OR NOT LUA_LIBRARY AND NOT BUILD_ROCK)
     find_package(Lua REQUIRED)
 endif()
 
@@ -30,13 +30,16 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -g0 -DNDEBUG")
 #----------
 # TESTS ---
 #----------
-FILE(GLOB TEST_SOURCES tests_src/cpp/*.cpp tests_src/cpp/*.h)
-set(GTEST_DIR libs/gtest/googletest)
-set(LUA_TESTS tests_src/lua/tests.lua)
+if (NOT BUILD_ROCK)
+    message("QWEQWE")
+    FILE(GLOB TEST_SOURCES tests_src/cpp/*.cpp tests_src/cpp/*.h)
+    set(GTEST_DIR libs/gtest/googletest)
+    set(LUA_TESTS tests_src/lua/tests.lua)
 
-include_directories(${GTEST_DIR}/include ${GTEST_DIR})
-add_executable(tests ${TEST_SOURCES} ${GTEST_DIR}/src/gtest-all.cc)
-target_link_libraries(tests effil)
+    include_directories(${GTEST_DIR}/include ${GTEST_DIR})
+    add_executable(tests ${TEST_SOURCES} ${GTEST_DIR}/src/gtest-all.cc)
+    target_link_libraries(tests effil)
+endif()
 
 #----------
 # FORMAT  -
@@ -50,8 +53,8 @@ add_custom_target( format
 #----------
 install(FILES ${LUA_TESTS} src/lua/effil.lua
         DESTINATION ${CMAKE_BINARY_DIR}
-        PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_READ)
+        PERMISSIONS OWNER_READ GROUP_READ WORLD_READ)
 
 install(TARGETS effil
         DESTINATION ${CMAKE_BINARY_DIR}
-        PERMISSIONS OWNER_WRITE OWNER_READ GROUP_READ GROUP_WRITE)
+        PERMISSIONS OWNER_READ GROUP_READ WORLD_READ)

@@ -26,14 +26,16 @@ local function get_unix_build(lib_extension)
         variables = {
             CMAKE_BUILD_TYPE     = "Release",
             CMAKE_PREFIX_PATH    = "$(LUA_BINDIR)/..",
-            CMAKE_INSTALL_PREFIX = "$(PREFIX)"
+            CMAKE_INSTALL_PREFIX = "$(PREFIX)",
+            CMAKE_LIBRARY_PATH   = "$(LUA_LIBDIR)",
+            LUA_INCLUDE_DIR      = "$(LUA_INCDIR)"
         },
       install = {
           lua = {
-              ["effil.lua"] = "effil.lua"
+              "effil.lua"
           },
           lib = {
-              ["libeffil." .. lib_extension] = "libeffil." .. lib_extension
+              "libeffil." .. lib_extension
           }
       }
     }
