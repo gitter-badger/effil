@@ -28,7 +28,8 @@ local function get_unix_build(lib_extension)
             CMAKE_PREFIX_PATH    = "$(LUA_BINDIR)/..",
             CMAKE_INSTALL_PREFIX = "$(PREFIX)",
             CMAKE_LIBRARY_PATH   = "$(LUA_LIBDIR)",
-            LUA_INCLUDE_DIR      = "$(LUA_INCDIR)"
+            LUA_INCLUDE_DIR      = "$(LUA_INCDIR)",
+            BUILD_ROCK           = "yes"
         },
       install = {
           lua = {
