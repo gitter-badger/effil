@@ -19,7 +19,7 @@ else()
 endif()
 
 add_library(effil SHARED ${SOURCES})
-target_link_libraries(effil -lpthread ${LUA_LIBRARY})
+target_link_libraries(effil -lpthread)
 
 set(GENERAL "-std=c++14 -DSOL_EXCEPTIONS_SAFE_PROPAGATION")
 set(ENABLE_WARNINGS "-Wall -Wextra -pedantic")
