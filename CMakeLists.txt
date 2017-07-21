@@ -14,6 +14,7 @@ if(APPLE)
     # Supress warning CMP0042
     set(CMAKE_MACOSX_RPATH 1)
     set(LIBRARY_EXT dylib)
+    set(EXTRA_FLAGS "-undefined dynamic_lookup")
 else()
     set(LIBRARY_EXT so)
 endif()
@@ -23,7 +24,7 @@ target_link_libraries(effil -lpthread)
 
 set(GENERAL "-std=c++14 -DSOL_EXCEPTIONS_SAFE_PROPAGATION")
 set(ENABLE_WARNINGS "-Wall -Wextra -pedantic")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GENERAL} ${ENABLE_WARNINGS}")
+set(CMAKE_CXX_FLAGS "${EXTRA_FLAGS} ${CMAKE_CXX_FLAGS} ${GENERAL} ${ENABLE_WARNINGS}")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Werror -O0 -g -UNDEBUG")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -g0 -DNDEBUG")
 
@@ -31,14 +32,13 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -g0 -DNDEBUG")
 # TESTS ---
 #----------
 if (NOT BUILD_ROCK)
-    message("QWEQWE")
     FILE(GLOB TEST_SOURCES tests_src/cpp/*.cpp tests_src/cpp/*.h)
     set(GTEST_DIR libs/gtest/googletest)
     set(LUA_TESTS tests_src/lua/tests.lua)
 
     include_directories(${GTEST_DIR}/include ${GTEST_DIR})
     add_executable(tests ${TEST_SOURCES} ${GTEST_DIR}/src/gtest-all.cc)
-    target_link_libraries(tests effil)
+    target_link_libraries(tests effil ${LUA_LIBRARY})
 endif()
 
 #----------
