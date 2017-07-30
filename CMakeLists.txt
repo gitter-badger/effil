@@ -51,7 +51,7 @@ add_custom_target( format
 #----------
 # INSTALL -
 #----------
-install(FILES ${LUA_TESTS} src/lua/effil.lua
+install(FILES ${LUA_TESTS} src/lua/effil.lua ${CMAKE_BINARY_DIR}/libeffil.${LIBRARY_EXT}
         DESTINATION ${CMAKE_BINARY_DIR}
         PERMISSIONS OWNER_READ GROUP_READ WORLD_READ)
 
