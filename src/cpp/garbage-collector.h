@@ -4,6 +4,7 @@
 #include <sol.hpp>
 #include <mutex>
 #include <map>
+#include <list>
 #include <set>
 
 namespace effil {
@@ -46,7 +47,7 @@ public:
         auto object = std::make_shared<ObjectType>(std::forward<Args>(args)...);
 
         std::lock_guard<std::mutex> g(lock_);
-        objects_[object->handle()] = object;
+        objects_.front()[object->handle()] = object;
         return *object;
     }
 
@@ -54,17 +55,17 @@ public:
     ObjectType get(GCObjectHandle handle) {
         std::lock_guard<std::mutex> g(lock_);
         // TODO: add dynamic cast to check?
-        return *static_cast<ObjectType*>(findObject(handle));
+        return *static_cast<ObjectType*>(findObject(handle).get());
     }
     bool has(GCObjectHandle handle) const;
 
     void collect();
     size_t size() const;
-    void pause() { enabled_ = false; };
-    void resume() { enabled_ = true; };
+    void pause() { enabled_ = false; }
+    void resume() { enabled_ = true; }
     size_t step() const { return step_; }
     void step(size_t newStep) { step_ = newStep; }
-    bool enabled() { return enabled_; };
+    bool enabled() { return enabled_; }
     size_t count();
 
     static GC& instance();
@@ -75,10 +76,11 @@ private:
     bool enabled_;
     std::atomic<size_t> lastCleanup_;
     size_t step_;
-    std::map<GCObjectHandle, std::shared_ptr<GCObject>> objects_;
+    std::list<std::map<GCObjectHandle, std::shared_ptr<GCObject>>> objects_;
+    size_t generation_;
 
 private:
-    GCObject* findObject(GCObjectHandle handle);
+    std::shared_ptr<GCObject> findObject(GCObjectHandle handle) const;
 
 private:
     GC(GC&&) = delete;
