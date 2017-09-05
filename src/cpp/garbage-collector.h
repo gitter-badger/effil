@@ -20,7 +20,8 @@ class GCObject {
 public:
     GCObject() noexcept
             : refs_(new std::set<GCObjectHandle>) {}
-    GCObject(const GCObject& init) = default;
+    GCObject(const GCObject&) = default;
+    GCObject& operator=(const GCObject&) = default;
     GCObject(GCObject&& init) = default;
     virtual ~GCObject() = default;
 
@@ -60,11 +61,11 @@ public:
 
     void collect();
     size_t size() const;
-    void pause() { enabled_ = false; };
-    void resume() { enabled_ = true; };
+    void pause() { enabled_ = false; }
+    void resume() { enabled_ = true; }
     size_t step() const { return step_; }
     void step(size_t newStep) { step_ = newStep; }
-    bool enabled() { return enabled_; };
+    bool enabled() { return enabled_; }
     size_t count();
 
     static GC& instance();

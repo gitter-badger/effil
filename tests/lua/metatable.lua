@@ -179,3 +179,68 @@ test.shared_table_with_metatable.as_shared_table = function()
     share.table_key = "table_value"
     test.equal(share.table_key, "mt_table_value")
 end
+
+test.metatable_api.check_type_missmatch = function(wrong_arg_num, expected_type, func_name, ...)
+    local args = {...}
+    local ret, err = pcall(effil[func_name], table.unpack(args))
+    if wrong_arg_num == nil then
+        test.is_true(ret)
+    else
+        test.is_false(ret)
+        test.equal(err, "bad argument #" .. wrong_arg_num .. " to 'effil." .. func_name ..
+            "' (" .. expected_type .. " expected, got " .. effil.type(args[wrong_arg_num]) .. ")")
+    end
+end
+
+do
+    local func = function()end
+    local thread = effil.thread(func)()
+    thread:wait()
+
+    local all_types = { 22, "s", true, func, effil.table(), thread, effil.channel(), coroutine.create(func) }
+
+    local supports_stable = { [effil.type(effil.table())] = true }
+    local supports_table_and_stable = { [effil.type({})] = true, [effil.type(effil.table())] = true }
+    local supports_all = setmetatable({}, {_index = function() return true end})
+
+    local funcs_to_test = {
+        -- function name = { [param index] = { list of supported types } }
+        setmetatable = { supports_table_and_stable, supports_table_and_stable },
+        getmetatable = { supports_stable, supports_stable },
+        rawset = { supports_stable, supports_all, supports_all },
+        rawget = { supports_stable, supports_all }
+    }
+
+    for func_name, func_cfg in pairs(funcs_to_test) do
+        local args_num = #func_cfg
+        local args_state = {}
+        for i = 1, args_num do
+            args_state[i] = 1
+        end
+
+        local finish = false
+        while not finish do
+            local first_wrond_arg = nil
+            local args = {}
+            for i = 1, args_num do
+                args[i] = all_types[args_state[i]]
+                if func_cfg[i][effil.type(args[i])] == nil and first_wrond_arg == nil then
+                    print("ASDASD: " .. effil.type(args[i]))
+                    first_wrond_arg = i
+                end
+            end
+            local expected_type = func_cfg[first_wrond_arg] == supports_stable and "effil.table" or "table"
+            test.metatable_api.check_type_missmatch(first_wrond_arg, expected_type, func_name, table.unpack(args))
+
+            for i = 1, args_num do
+                if args_state[i] < #all_types then
+                    args_state[i] = args_state[i] + 1
+                    break
+                end
+                if i == args_num then
+                    finish = true
+                end
+            end
+        end
+    end
+end

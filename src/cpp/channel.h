@@ -14,7 +14,7 @@ public:
 
     bool push(const sol::variadic_args& args);
     StoredArray pop(const sol::optional<int>& duration,
-                     const sol::optional<std::string>& period);
+                    const sol::optional<std::string>& period);
 
     size_t size();
 protected:

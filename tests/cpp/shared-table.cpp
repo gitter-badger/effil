@@ -211,31 +211,6 @@ TEST(sharedTable, playingWithTables) {
     EXPECT_EQ(lua["st"]["recursive"]["prev"]["next"]["next"]["val"], std::string("recursive"));
 }
 
-TEST(sharedTable, stress) {
-    sol::state lua;
-    bootstrapState(lua);
-    SharedTable st;
-
-    lua["st"] = st;
-
-    auto res1 = lua.script(R"(
-        for i = 1, 1000000 do
-            st[i] = tostring(i)
-        end
-    )");
-
-    EXPECT_TRUE(res1.valid());
-    EXPECT_TRUE(SharedTable::luaSize(st) == 1'000'000);
-
-    auto res2 = lua.script(R"(
-        for i = 1000000, 1, -1 do
-            st[i] = nil
-        end
-    )");
-    EXPECT_TRUE(res2.valid());
-    EXPECT_TRUE(SharedTable::luaSize(st) == 0);
-}
-
 TEST(sharedTable, stressWithThreads) {
     SharedTable st;
 

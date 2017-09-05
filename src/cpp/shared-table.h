@@ -22,6 +22,7 @@ public:
     SharedTable();
     SharedTable(SharedTable&&) = default;
     SharedTable(const SharedTable& init);
+    SharedTable& operator=(const SharedTable&) = default;
     virtual ~SharedTable() = default;
 
     static void getUserType(sol::state_view& lua);
@@ -54,11 +55,11 @@ public:
     static sol::object luaConcat(sol::this_state, const sol::stack_object&, const sol::stack_object&);
 
     // Stand alone functions for effil::table available in Lua
-    static SharedTable luaSetMetatable(SharedTable& stable, const sol::stack_object& mt);
-    static sol::object luaGetMetatable(const SharedTable& stable, const sol::this_state state);
-    static sol::object luaRawGet(const SharedTable& stable, const sol::stack_object& key, sol::this_state state);
-    static SharedTable luaRawSet(SharedTable& stable, const sol::stack_object& key, const sol::stack_object& value);
-    static size_t luaSize(SharedTable& stable);
+    static SharedTable luaSetMetatable(const sol::stack_object& tbl, const sol::stack_object& mt);
+    static sol::object luaGetMetatable(const sol::stack_object& tbl, const sol::this_state state);
+    static sol::object luaRawGet(const sol::stack_object& tbl, const sol::stack_object& key, sol::this_state state);
+    static SharedTable luaRawSet(const sol::stack_object& tbl, const sol::stack_object& key, const sol::stack_object& value);
+    static size_t luaSize(const sol::stack_object& tbl);
 
 private:
     PairsIterator getNext(const sol::object& key, sol::this_state lua);
