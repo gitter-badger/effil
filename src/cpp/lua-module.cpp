@@ -28,7 +28,7 @@ sol::object createTable(sol::this_state lua, const sol::optional<sol::object>& t
     return sol::make_object(lua, GC::instance().create<SharedTable>());
 }
 
-sol::object createChannel(sol::optional<int> capacity, sol::this_state lua) {
+sol::object createChannel(const sol::stack_object& capacity, sol::this_state lua) {
     return sol::make_object(lua, GC::instance().create<Channel>(capacity));
 }
 
@@ -60,7 +60,7 @@ extern "C" int luaopen_libeffil(lua_State* L) {
             "G", sol::make_object(lua, globalTable),
             "gc", GC::getLuaApi(lua),
             "channel", createChannel,
-            "userdata_type", getLuaTypename
+            "type", getLuaTypename
     );
     sol::stack::push(lua, publicApi);
     return 1;

@@ -23,17 +23,9 @@ local api = {
     getmetatable = capi.getmetatable,
     G = capi.G,
     gc = capi.gc,
-    channel = capi.channel
+    channel = capi.channel,
+    type = capi.type
 }
-
-api.type = function (something)
-    local t = type(something)
-    if (t ~= "userdata") then
-        return t
-    else
-        return capi.userdata_type(something)
-    end
-end
 
 api.size = function (something)
     local t = api.type(something)
@@ -57,6 +49,10 @@ end
 --     step - who fast reacte on state changing
 --     __call - run thread, can be invoked multiple times
 api.thread = function (f)
+    if type(f) ~= "function" then
+        error("bad argument #1 to 'effil.thread' (function expected, got " .. effil.type(f) .. ")")
+    end
+
     local thread_config = {
         path = package.path,
         cpath = package.cpath,
