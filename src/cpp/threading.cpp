@@ -204,9 +204,11 @@ Thread::Thread(const std::string& path,
     std::string strFunction = dumpFunction(function);
 
     effil::StoredArray arguments;
-    for (const auto& arg : variadicArgs) {
-        arguments.emplace_back(createStoredObject(arg.get<sol::object>()));
-    }
+    try {
+        for (const auto& arg : variadicArgs) {
+            arguments.emplace_back(createStoredObject(arg.get<sol::object>()));
+        }
+    } RETHROW_WITH_PREFIX("effil.thread");
 
     std::thread thr(&runThread,
                     handle_,

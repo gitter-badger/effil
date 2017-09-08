@@ -174,12 +174,16 @@ void SharedTable::luaNewIndex(const sol::stack_object& luaKey, const sol::stack_
             }
         }
     }
-    rawSet(luaKey, luaValue);
+    try {
+        rawSet(luaKey, luaValue);
+    } RETHROW_WITH_PREFIX("effil.table");
 }
 
 sol::object SharedTable::luaIndex(const sol::stack_object& luaKey, sol::this_state state) {
     DEFFINE_METAMETHOD_CALL("__index", *this, luaKey)
-    return rawGet(luaKey, state);
+    try {
+        return rawGet(luaKey, state);
+    } RETHROW_WITH_PREFIX("effil.table");
 }
 
 StoredArray SharedTable::luaCall(sol::this_state state, const sol::variadic_args& args) {

@@ -34,10 +34,13 @@ bool Channel::push(const sol::variadic_args& args) {
         return false;
     effil::StoredArray array;
     for (const auto& arg : args) {
-        auto obj = createStoredObject(arg.get<sol::object>());
-        if (obj->gcHandle())
-            refs_->insert(obj->gcHandle());
-        array.emplace_back(obj);
+        try {
+            auto obj = createStoredObject(arg.get<sol::object>());
+            if (obj->gcHandle())
+                refs_->insert(obj->gcHandle());
+            array.emplace_back(obj);
+        }
+        RETHROW_WITH_PREFIX("effil.channel:push");
     }
     if (data_->channel_.empty())
         data_->cv_.notify_one();
