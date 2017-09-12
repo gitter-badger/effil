@@ -39,7 +39,10 @@ end
 
 do
     local function create_object_generator(name, func)
-        return setmetatable({ name = name }, { __call = func })
+        return setmetatable({ name = name }, {
+            __call = func,
+            __tostring = function() return name end
+        })
     end
 
     local channel_push_generator = create_object_generator("effil.channel:push",
@@ -70,8 +73,9 @@ do
     local stable = effil.table()
     local thread = effil.thread(func)()
     thread:wait()
+    local lua_thread = coroutine.create(func)
 
-    local all_types = { 22, "s", true, {}, stable, func, thread, effil.channel(), coroutine.create(func) }
+    local all_types = { 22, "s", true, {}, stable, func, thread, effil.channel(), lua_thread }
 
     for _, type_instance in ipairs(all_types) do
         local typename = effil.type(type_instance)
@@ -91,17 +95,10 @@ do
         if typename ~= "effil.table" then
             test.type_mismatch.input_types_mismatch(1, "effil.table", "rawset", type_instance, 44, 22)
         end
-        if typename == "thread" then
-            test.type_mismatch.unsupported_type(2, "rawset", stable, type_instance, 22)
-            test.type_mismatch.unsupported_type(3, "rawset", stable, 44, type_instance)
-        end
 
         -- effil.rawget
         if typename ~= "effil.table" then
             test.type_mismatch.input_types_mismatch(1, "effil.table", "rawget", type_instance, 44)
-        end
-        if typename == "thread" then
-            test.type_mismatch.unsupported_type(2, "rawget", stable, type_instance)
         end
 
         -- effil.thread
@@ -121,24 +118,30 @@ do
             -- effil.channel
             test.type_mismatch.input_types_mismatch(1, "number", "channel", type_instance)
 
-            -- effil.gc.step
+            --  effil.gc.step
             test.type_mismatch.input_types_mismatch(1, "number", "gc.step", type_instance)
         end
-
-        if typename == "thread" then
-            -- effil.channel:push()
-            test.type_mismatch.unsupported_type(1, channel_push_generator, type_instance)
-
-            -- effil.thread()()
-            test.type_mismatch.unsupported_type(1, thread_runner_generator, type_instance)
-
-            -- effil.table[key] = value
-            test.type_mismatch.unsupported_type(1, table_set_value_generator, type_instance, 2)
-            test.type_mismatch.unsupported_type(2, table_set_value_generator, 2, type_instance)
-            -- effil.table[key]
-            test.type_mismatch.unsupported_type(1, table_get_value_generator, type_instance)
-        end
     end
+
+    -- Below presented tests which support everything except coroutines
+    -- effil.rawset
+    test.type_mismatch.unsupported_type(2, "rawset", stable, lua_thread, 22)
+    test.type_mismatch.unsupported_type(3, "rawset", stable, 44, lua_thread)
+
+    -- effil.rawget
+    test.type_mismatch.unsupported_type(2, "rawget", stable, lua_thread)
+
+    -- effil.channel:push()
+    test.type_mismatch.unsupported_type(1, channel_push_generator, lua_thread)
+
+    -- effil.thread()()
+    test.type_mismatch.unsupported_type(1, thread_runner_generator, lua_thread)
+
+    -- effil.table[key] = value
+    test.type_mismatch.unsupported_type(1, table_set_value_generator, lua_thread, 2)
+    test.type_mismatch.unsupported_type(2, table_set_value_generator, 2, lua_thread)
+    -- effil.table[key]
+    test.type_mismatch.unsupported_type(1, table_get_value_generator, lua_thread)
 end
 
 --[[
