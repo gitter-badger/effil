@@ -15,7 +15,10 @@ local basic_type_mismatch_test = function(err_msg, wrong_arg_num, func_name , ..
     print("Original error: '" .. err .. "'")
 
     -- because error may start with trace back
-    local trunc_err = string.sub(err, string.len(err) - string.len(err_msg) + 1, string.len(err))
+    local trunc_err = err
+    if string.len(err) > string.len(err_msg) then
+        trunc_err = string.sub(err, string.len(err) - string.len(err_msg) + 1, string.len(err))
+    end
     test.equal(trunc_err, err_msg)
 end
 
